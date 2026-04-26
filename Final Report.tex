@@ -10,7 +10,8 @@
 
 \title{Pricing Project\\[0.4ex]
 \large Choice Modeling, Assortment Optimization and Pricing}
-\author{Alexander Dyckerhoff}
+\author{Alexander Dyckerhoff, Parsa Bazargani, 
+Sam DeLucia-Green }
 \date{April 2026}
 
 \begin{document}
@@ -221,7 +222,7 @@ We redefine customer types based on the number of adults in the search query:
   \item \textbf{Type 2 (group):} \texttt{srch\_adults\_count > 1} (6,224 queries, 74.5\%)
 \end{itemize}
 
-Solo travelers are often business travelers on a single budget; group bookings (couples, families) split cost across adults and tend to be leisure-oriented.
+Solo travelers are often business travelers on a single budget; group bookings (couples, families) split cost across adults and tend to be leisure-oriented. The Saturday/non-Saturday split suggested in the problem statement was considered but discarded: Saturday vs.\ non-Saturday produces near-identical MNL coefficients across all eight features (the full comparison is in Section~\ref{sec:sat}), meaning the split captures day-of-week noise rather than a genuine behavioral distinction. Solo/group was chosen because it encodes a structural difference in travel purpose that maps onto measurable preference heterogeneity -- particularly brand loyalty and location sensitivity, which are proxies for business vs.\ leisure intent.
 
 \subsection*{Parameter analysis}
 
@@ -245,19 +246,7 @@ Promotion flag       & $+0.141$ & $+0.169$ & $+0.028$ \\
 \caption{MMNL coefficients (standardized features) for solo vs.\ group split.}
 \end{table}
 
-\textbf{Intercept.} Solo travelers have a much less-negative intercept ($-1.37$ vs.\ $-1.87$): substantially higher baseline booking propensity, consistent with business trips where dates are fixed.
-
-\textbf{Price sensitivity.} Solo travelers are \textit{more} price-sensitive ($-1.44$ vs.\ $-1.28$). Solo travelers pay the full nightly rate themselves; group bookings split cost across adults, lowering per-person sensitivity.
-
-\textbf{Brand and location.} Solo travelers weight brand ($+0.16$ vs.\ $+0.08$, roughly $2\times$) and location ($+0.08$ vs.\ $0.00$) much more heavily. This is the signature of business travel: loyalty programs matter and proximity to the destination is a hard constraint. Group travelers are essentially indifferent to location, consistent with leisure trips where the hotel itself is part of the experience.
-
-\textbf{Review score and accessibility.} Group travelers lean more on external validation: review score ($+0.12$ vs.\ $+0.07$) and accessibility ($+0.05$ vs.\ $+0.02$). Families and couples reach consensus through social proof; solo travelers rely on brand signals they already trust.
-
-\textbf{Promotion flag.} Both types respond positively, with group slightly more responsive ($+0.17$ vs.\ $+0.14$). Group trips are often discretionary, so a promotion can tip a leisure decision on the fence.
-
-\textbf{Star rating.} Coefficients are close ($+0.43$ solo vs.\ $+0.39$ group), so both types value quality similarly once other features are controlled for.
-
-\textbf{Contrast with Problem 4.} The early/late split produced a large price-sensitivity gap (0.63 units). The solo/group split produces a smaller price gap (0.16 units) but a much larger intercept gap (0.50 vs.\ 0.38 in early/late) and more meaningful differences in brand and location. Early/late separates customers on \textit{readiness to buy}; solo/group separates them on \textit{travel purpose} (business vs.\ leisure).
+Solo travelers are more price-sensitive ($-1.44$ vs.\ $-1.28$) despite paying alone; group bookings split cost across adults, lowering per-person sensitivity. Solo travelers weight brand and location roughly $2\times$ more heavily, the signature of business travel where loyalty programs and proximity are constraints. Group travelers lean more on review score and accessibility. Compared to Problem 4's early/late split (price gap: 0.63 units), this split produces a smaller price gap (0.16 units) but a larger intercept gap (0.50) and more differentiation on brand and location: early/late separates on readiness to buy, solo/group on travel purpose.
 
 \subsection*{Assortment results}
 
@@ -280,28 +269,13 @@ data4 & 11 &  97.26 & 10 & 102.29 & 102.06 & 0.24 & 11 &  95.62 &  95.62 & 0.00 
 
 \textbf{Gaps are larger than in Problem 5.} The cost of the compromise assortment for solo customers rises to \$3.36 on data2, averaging above \$0.75 in three of four datasets. Group-side gaps are very small (0.00--0.12). The mixture is pulled toward the majority (group) type, so the minority (solo) absorbs most of the lost revenue.
 
-\begin{table}[h]
-\centering
-\begin{tabular}{lrr}
-\toprule
-Dataset & gap (solo) & gap (group) \\
-\midrule
-data1 & $+0.39$ & $+0.12$ \\
-data2 & $+3.36$ & $+0.00$ \\
-data3 & $+0.76$ & $+0.10$ \\
-data4 & $+0.24$ & $+0.00$ \\
-\bottomrule
-\end{tabular}
-\caption{Revenue gap from serving the compromise assortment $S$ instead of the type-specific optimum.}
-\end{table}
-
 \textbf{$|S_s|$ is always smaller than $|S_g|$.} Solo customers are offered fewer hotels in every dataset (16 vs.\ 21 in data1, 6 vs.\ 10 in data2, 15 vs.\ 19 in data3, 10 vs.\ 11 in data4). A few hotels dominate solo preferences, so the optimal assortment concentrates on those top items.
 
 \textbf{$S$ coincides with $S_g$ in data2 and data4.} Because group customers are 74.5\% of the population, the mixture assortment inherits their preferred assortment on these two datasets, and solo customers absorb the full adaptation cost.
 
-\textbf{Contrast with Problem 5.} Problem 5's early/late split produced gaps up to \$0.92. This solo/group split produces a gap of \$3.36 on data2, more than $3\times$ larger. Trip-purpose signals (solo vs.\ group) drive real assortment-level lift; trip-timing signals like early/late produce smaller gaps.
+\textbf{Contrast with Problems 5 and Appendix~\ref{sec:sat}.} Problem 5's early/late split produced gaps up to \$0.92. The Saturday/non-Saturday split (Appendix~\ref{sec:sat}) produces gaps of at most \$0.01. This solo/group split produces a gap of \$3.36 on data2, more than $3\times$ larger than early/late and $300\times$ larger than Saturday. The ordering -- solo/group $\gg$ early/late $\gg$ Saturday -- confirms that trip-purpose signals drive real assortment-level lift, while demographic-timing signals produce minimal value of personalization.
 
-\textbf{Main takeaway.} Solo vs.\ group disagrees on the assortment itself: solo wants fewer, higher-priced, brand-heavy hotels; group wants a broader assortment. That disagreement at the decision level is why personalization pays off here. Early/late and Saturday/non-Saturday mostly agree on the decision, so the personalization lift is modest.
+\textbf{Main takeaway.} Solo vs.\ group disagrees on the assortment itself: solo wants fewer, higher-priced, brand-heavy hotels; group wants a broader assortment. That disagreement at the decision level is why personalization pays off here.
 
 %%===================================================================
 \section{Problem 7: AI Agents as Customers}
@@ -357,11 +331,13 @@ Even when a strong option exists, the customer does not always book. The model a
 
 The data was split 80/20. The AI agent received the training set as context and predicted booking decisions on the held-out test set. The MNL from Problem 1 produced choice probabilities $\mathbb{P}(j|S)$ on the same queries.
 
-Session top-1 accuracy asks whether the model picks the same hotel the real customer booked. The MNL outperforms the agent: 29.1\% vs.\ 19.6\% (487 vs.\ 327 correct out of 1,671 sessions). Exact-match top-1 is a strict bar: even the true model will miss most individual realizations because choices are noisy. The behavior comparison below is the primary evaluation, checking whether models reproduce the \textit{distribution} of booking behavior rather than each individual choice.
+\textbf{Metrics.} Two complementary metrics are used. \textit{Session top-1 accuracy} asks whether a model selects the same hotel the real customer booked (argmax of predicted probabilities vs.\ realized choice, per session). It is a strict exact-match bar: individual choices are noisy realizations from a distribution, so even the true model will miss most. This makes top-1 useful for ranking models but a poor absolute measure of fit. \textit{Distributional behavior comparison} asks whether models reproduce aggregate booking rates across feature bins (star rating, promotion, price quartile) and the average attribute profile of booked hotels. This is the primary metric because it tests whether a model captures the statistical regularities in choice behavior -- the thing that matters for pricing and assortment decisions -- rather than predicting individual noise.
+
+\textbf{Results.} Session top-1: MNL 29.1\% vs.\ agent 19.6\% (487 vs.\ 327 correct out of 1,671 sessions). The MNL outperforms the agent by a substantial margin on exact-match prediction.
 
 \subsection*{Behavior comparison}
 
-Rather than asking whether the models predict the exact realized choice, we check whether they reproduce the \textit{aggregate behavior} in the data: booking rates across attribute bins and the average attribute profile of booked hotels.
+We check whether each model reproduces the \textit{aggregate behavior} in the data: booking rates across attribute bins and the average attribute profile of booked hotels.
 
 \begin{table}[h]
 \centering
@@ -426,5 +402,54 @@ Brand rate        & 0.747  & 0.779  & 0.746  \\
 \textbf{Results.} The MNL matches the real booking rate almost exactly in every bin, expected since it was fit to maximize likelihood on data with the same structure. The agent tracks the real pattern directionally but overreacts to promotions (8.8\% booking rate on promoted hotels vs.\ real 6.1\%) and underreacts to high prices (1.8\% of Q4-price hotels booked vs.\ real 2.9\%). The attribute profile confirms this: the agent books hotels that are approximately \$12 cheaper on average and 10 percentage points more likely to be promoted than real customers do. Despite matching the overall booking rate (3.9\% vs.\ 4.0\%), the agent systematically reallocates which hotels get booked toward the cheaper-and-promoted end of the spectrum.
 
 \textbf{Discussion.} The agent captures the qualitative structure of human hotel choice but cannot calibrate the relative magnitudes. The MNL, fit by maximum likelihood on 153k observations, learns the exact statistical tradeoffs from revealed preferences. The agent relies on general reasoning with no access to the aggregate patterns in the data during inference. This shows up in the behavior comparison: the agent overweights promotional discounts and underweights price levels relative to real customers, even when those customers face the same choice sets. For structured choice settings like hotel search, statistical models trained on observed behavior reproduce aggregate choice patterns far more accurately than general-purpose reasoning.
+
+%%===================================================================
+\appendix
+\section{Saturday vs.\ Non-Saturday Segmentation}
+\label{sec:sat}
+%%===================================================================
+
+This appendix reports the Saturday/non-Saturday segmentation (the example split named in the problem statement) as a baseline against which to evaluate the solo/group choice in Problem 6.
+
+\textbf{Mix:} 4,817 Saturday queries (57.7\%), 3,537 non-Saturday queries (42.3\%).
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lrrr}
+\toprule
+Feature & Saturday & Non-Saturday & Diff \\
+\midrule
+Intercept            & $-1.755$ & $-1.739$ & $+0.016$ \\
+Star rating          & $+0.358$ & $+0.474$ & $+0.116$ \\
+Review score         & $+0.111$ & $+0.110$ & $-0.001$ \\
+Brand                & $+0.098$ & $+0.109$ & $+0.010$ \\
+Location score       & $+0.026$ & $+0.017$ & $-0.009$ \\
+Accessibility        & $+0.036$ & $+0.052$ & $+0.016$ \\
+Log hist.\ price     & $-0.062$ & $-0.070$ & $-0.009$ \\
+Price (USD)          & $-1.155$ & $-1.569$ & $-0.414$ \\
+Promotion flag       & $+0.168$ & $+0.148$ & $-0.020$ \\
+\bottomrule
+\end{tabular}
+\caption{MMNL coefficients for Saturday vs.\ non-Saturday split. Compare to Problem 6 (Table~5): differences here are far smaller.}
+\end{table}
+
+Most coefficients differ by less than 0.02. The only meaningful gap is price sensitivity ($-1.16$ vs.\ $-1.57$, difference 0.41), which is smaller than the early/late price gap (0.63, Problem 4) and less than one-third the solo/group intercept gap (0.50, Problem 6). All other features are essentially identical across the two types.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lrrrrrr}
+\toprule
+Dataset & $|S|$ & $R_\text{mix}$ & gap$_\text{Sat}$ & gap$_\text{Non-Sat}$ \\
+\midrule
+data1 & 18 & 107.35 & 0.010 & 0.002 \\
+data2 & 10 & 130.95 & 0.000 & 0.000 \\
+data3 & 18 & 121.17 & 0.000 & 0.000 \\
+data4 & 11 &  97.26 & 0.000 & 0.000 \\
+\bottomrule
+\end{tabular}
+\caption{Assortment gaps under Saturday/non-Saturday MMNL. Compare to Problem 5 (max gap \$0.92) and Problem 6 (max gap \$3.36).}
+\end{table}
+
+All assortment gaps are at or near zero. In three of four datasets the compromise assortment is simultaneously optimal for both types. The maximum gap (\$0.01 on data1) is two orders of magnitude smaller than the solo/group gap (\$3.36 on data2). This confirms that Saturday/non-Saturday encodes no decision-level disagreement: both types want the same assortment, so there is no value in personalization along this dimension.
 
 \end{document}
