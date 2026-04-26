@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python -c \"import PyPDF2; r=PyPDF2.PdfReader\\('Project.pdf'\\); [print\\(p.extract_text\\(\\)\\) for p in r.pages]\")",
+      "Bash(python -c \"import pymupdf; doc=pymupdf.open\\('Project.pdf'\\); [print\\(page.get_text\\(\\)\\) for page in doc]\")",
+      "Bash(pip install *)",
+      "Bash(python -c \"import pdfplumber; pdf = pdfplumber.open\\('Project.pdf'\\); [print\\(p.extract_text\\(\\)\\) for p in pdf.pages]\")",
+      "Bash(pip --version)",
+      "Bash(python -m pip install pdfplumber)",
+      "Bash(python -m pip install pdfminer.six)",
+      "Bash(python -c \"from pdfminer.high_level import extract_text; text=extract_text\\('C:/Users/samde/OneDrive/Desktop/Trying stuff/prcing project/Pricing-Project/Project.pdf'\\); print\\(text\\)\")",
+      "Bash(python -c ' *)",
+      "Bash(python)",
+      "Bash(python -c \" import sys, io sys.stdout = io.TextIOWrapper\\(sys.stdout.buffer, encoding='utf-8'\\) from pdfminer.high_level import extract_text text = extract_text\\('Project.pdf'\\) print\\(text\\) \")"
+    ]
+  }
+}
