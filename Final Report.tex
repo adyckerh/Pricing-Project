@@ -331,30 +331,6 @@ We redefine customer types based on the number of adults in the search query:
 
 Solo vs.\ group encodes a structural difference in travel purpose: solo travelers are more likely to be business travelers, while group bookings (couples, families) are leisure-oriented.
 
-\subsection*{Parameter analysis}
-
-\begin{table}[h]
-\centering
-\begin{tabular}{lrrr}
-\toprule
-Feature & Solo & Group & Diff (group $-$ solo) \\
-\midrule
-Intercept            & $-1.365$ & $-1.870$ & $-0.505$ \\
-Star rating          & $+0.435$ & $+0.392$ & $-0.043$ \\
-Review score         & $+0.073$ & $+0.125$ & $+0.052$ \\
-Brand                & $+0.158$ & $+0.081$ & $-0.077$ \\
-Location score       & $+0.081$ & $-0.001$ & $-0.082$ \\
-Accessibility        & $+0.024$ & $+0.050$ & $+0.027$ \\
-Log hist.\ price     & $-0.060$ & $-0.068$ & $-0.008$ \\
-Price (USD)          & $-1.440$ & $-1.283$ & $+0.157$ \\
-Promotion flag       & $+0.141$ & $+0.169$ & $+0.028$ \\
-\bottomrule
-\end{tabular}
-\caption{MMNL coefficients (standardized features) for solo vs.\ group split.}
-\end{table}
-
-The two types show meaningful differences: solo travelers are more price-sensitive ($-1.44$ vs.\ $-1.28$) and weight brand and location more heavily, while group travelers rely more on review score and accessibility.
-
 \subsection*{Assortment results}
 
 For each dataset, $S$ is the compromise assortment (mixture-optimal), $S_s$ is optimal for solo customers, and $S_g$ is optimal for group customers.
@@ -401,6 +377,10 @@ data4 & 11 &  97.26 & 10 & 102.29 & 102.06 & 0.24 & 11 &  95.62 &  95.62 & 0.00 
 }
 \caption{Problem 6: compromise vs.\ type-specific assortments. $S_s$ is optimal for solo, $S_g$ for group. Revenues in \$.}
 \end{table}
+
+\textbf{Gaps are larger than in Problem 5.} The solo gap reaches \$3.36 on data2 -- more than $3\times$ the largest gap in Problem 5 (\$0.92). Group gaps are near zero (0.00--0.12). Because group customers are 74.5\% of the population, the mixture assortment $S$ coincides with $S_g$ on data2 and data4, so solo customers absorb the full adaptation cost.
+
+\textbf{Main takeaway.} Segmentation improves personalization only when types disagree on the \textit{decision}, not just the parameters. Solo vs.\ group disagrees on the assortment itself -- solo wants fewer, higher-priced hotels while group wants a broader set -- which is why the personalization lift here is substantially larger than in Problem 5.
 
 %%===================================================================
 \section{Problem 7: AI Agents as Customers}
